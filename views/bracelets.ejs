@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Bracelets - Gold Beyond</title>
+</head>
+<style>
+h1 {
+    text-align: center;
+    font-family: 'The Seasons';
+    font-size: 3vw;
+    margin: 20px;
+}
+    
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+    gap: 30px;
+    padding: 20px;
+}
+
+.product-card {
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 280px; /* Default size for multiple items */
+
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.product-card img {
+    max-width: 100%;
+    height: auto;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.product-card h2 {
+    font-size: 1.5vw;
+    margin: 10px 0;
+    font-weight: bold;
+    color: #65422e;
+    font-family: 'The Youngest';
+    text-align: left;
+}
+
+.product-card p {
+    font-size: 1.4vw;
+    color: #a77a4d;
+    margin-top: 5px;
+    font-family: 'The Youngest';
+    text-align: left;
+}
+
+.product-card-link {
+    text-decoration: none;
+    color: inherit;
+    text-align: left;
+}
+    
+footer {
+    background-color: #a86e3e;
+    text-align: center;
+    color: white;
+    padding: 1rem 0;
+    margin-top: 2rem;
+}
+    
+.footer-text {
+    margin: 0;
+}
+
+</style>
+
+<%- include('partials/navbar.ejs') %> 
+
+<body>
+    <main>
+        <h1>Bracelets</h1>
+        <div class="product-grid">
+            <% products.forEach(product => { %>
+                <a href="/product/<%= product.productID %>" class="product-card-link">
+                    <div class="product-card">
+                        <img src="/images/<%= product.productImg %>" alt="<%= product.productName %>">
+                        <h2><%= product.productName %></h2>
+                        <p><%= product.price %> SGD</p>
+                    </div>
+                </a>
+            <% }) %>
+        </div>        
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Gold Beyond. All rights reserved.</p>
+    </footer>
+</body>
+</html>

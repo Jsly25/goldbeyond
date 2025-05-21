@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail - <%= product.productName %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            font-family: "Cormorant Garamond", serif;
+            background-color: #f9f9f9;
+        }
+        .product-detail-container {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 50px;
+        }
+        .image-section {
+            flex: 1;
+            min-height: 500px;
+        }
+        .image-section img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .details-section {
+            flex: 1;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .details-section h2 {
+            color: #6d4b34;
+            text-align: center;
+        }
+        .btn-buy {
+            background-color: #6d4b34;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .form-group input {
+            width: 10%;
+            margin-bottom:10px;
+        }
+        .btn-buy:hover {
+            background-color: #533726;
+        }
+
+        /* Stars Styling */
+        .stars {
+            font-size: 24px;
+            cursor: pointer;
+            display: inline-flex;
+        }
+        .stars span {
+            color: #ccc;
+            transition: color 0.2s;
+        }
+        .stars span:hover,
+        .stars span:hover ~ span,
+        .stars span.active {
+            color: #FFD700; 
+        }
+
+        .reviews-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/navbar.ejs') %>
+    <div class="product-detail-container">
+        <!-- Image Section -->
+        <div class="image-section">
+            <img src="/images/<%= product.productImg %>" alt="<%= product.productName %>">
+        </div>
+        <!-- Details Section -->
+        <div class="details-section">
+            <h2><%= product.productName %></h2>
+            <p><strong>Price:</strong> $<%= product.price %> SGD</p>
+            <p><strong>Material:</strong> <%= product.material %></p>
+            <p><strong>Description:</strong> <%= product.productDescription %></p>
+            <p><strong>Available Stocks:</strong> <%= product.Stock %></p>
+            
+            <form action="/add-to-cart" method="POST" onsubmit="return confirmAddToCart(event)">
+                <input type="hidden" name="productID" value="<%= product.productID %>">
+                <input type="hidden" name="productName" value="<%= product.productName %>">
+                <input type="hidden" name="price" value="<%= product.price %>">
+                <input type="hidden" name="productImg" value="<%= product.productImg %>">
+                <input type="hidden" name="isLoggedIn" value="<%= isLoggedIn %>">
+            
+                <div class="form-group">
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" id="quantity" name="quantity" value="1" min="1" max="<%= product.Stock %>" class="form-control"
+                        <%= product.Stock === 0 ? 'disabled' : '' %>>
+                </div>
+            
+                <% if (product.Stock > 0) { %>
+                    <button type="submit" class="btn-buy">Add to cart</button>
+                <% } else { %>
+                    <button type="button" class="btn-buy" disabled style="background-color: gray; cursor: not-allowed;">Sold Out</button>
+                <% } %>
+            </form>
+            
+
+           <!-- Customer Reviews -->
+<div class="reviews-section">
+    <h3>Customer Reviews</h3>
+    <div class="rating-summary">
+        <span class="stars">
+            <% let avgRating = reviews.length > 0 
+                ? reviews.reduce((sum, review) => sum + review.Rating, 0) / reviews.length 
+                : 0;
+            let fullStars = Math.floor(avgRating);
+            let halfStar = avgRating % 1 >= 0.5;
+            %>
+            <% for(let i = 0; i < fullStars; i++) { %> ★ <% } %>
+            <% if (halfStar) { %> ☆ <% } %>
+        </span>
+        <span class="review-count"><%= reviews.length %> Reviews</span>
+    </div>
+
+    <% if (reviews.length > 0) { %>
+        <% reviews.forEach(review => { %>
+            <div class="review">
+                <div class="review-header">
+                    <strong><%= review.userName %></strong> 
+                    <span class="stars">
+                        <% for(let i = 0; i < review.Rating; i++) { %> ★ <% } %>
+                    </span>
+                </div>
+                <p class="review-comment"><%= review.Comment %></p>
+            </div>
+        <% }); %>
+    <% } else { %>
+        <p>No reviews yet. Be the first to review this product!</p>
+    <% } %>
+
+    <!-- Review Form: Only show if logged in -->
+    <% if (isLoggedIn) { %>
+        <h4>Write a Review</h4>
+        <form action="/submit-review" method="POST">
+            <input type="hidden" name="productID" value="<%= product.productID %>">
+            <div class="form-group">
+                <label for="rating">Rating:</label>
+                <div class="stars" id="star-rating">
+                    <span data-value="1">★</span>
+                    <span data-value="2">★</span>
+                    <span data-value="3">★</span>
+                    <span data-value="4">★</span>
+                    <span data-value="5">★</span>
+                </div>
+                <input type="hidden" id="rating-value" name="rating" required>
+            </div>
+            <div class="form-group">
+                <label for="comment">Comment:</label>
+                <textarea id="comment" name="comment" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="btn-buy">Submit Review</button>
+        </form>
+    <% } else { %>
+        <p><a href="/login">Login to leave a review</a></p>
+    <% } %>
+</div>
+
+    <script>
+        function confirmAddToCart(event) {
+            const isLoggedIn = document.querySelector('input[name="isLoggedIn"]').value === 'true';
+            if (isLoggedIn) {
+                return confirm('Successfully added to cart!');
+            } else {
+                return true; // Allow the form to submit and redirect to login page
+            }
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            const stars = document.querySelectorAll("#star-rating span");
+            const ratingInput = document.getElementById("rating-value");
+
+            stars.forEach((star, index) => {
+                star.addEventListener("click", function () {
+                    const rating = parseInt(this.getAttribute("data-value"));
+                    ratingInput.value = rating;
+
+                    // Reset all stars
+                    stars.forEach(s => s.classList.remove("active"));
+
+                    // Highlight all stars up to the selected one
+                    for (let i = 0; i < rating; i++) {
+                        stars[i].classList.add("active");
+                    }
+                });
+
+                // Highlight stars on hover
+                star.addEventListener("mouseover", function () {
+                    stars.forEach(s => s.classList.remove("active"));
+                    for (let i = 0; i <= index; i++) {
+                        stars[i].classList.add("active");
+                    }
+                });
+
+                // Remove highlight when not hovering
+                star.addEventListener("mouseout", function () {
+                    const rating = parseInt(ratingInput.value);
+                    stars.forEach(s => s.classList.remove("active"));
+                    for (let i = 0; i < rating; i++) {
+                        stars[i].classList.add("active");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

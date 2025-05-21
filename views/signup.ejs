@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <title>Register</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f3ed;
+    color: #333;
+}
+
+.login-box {
+    max-width: 50%;
+    margin: 50px auto;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.tabs {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    background-color: #f3e8d8;
+    padding: 5px;
+}
+
+.tabs a {
+    text-decoration: none;
+    flex: 1;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #a77a4d;
+}
+
+.tabs a.active {
+    background-color: #a77a4d;
+    color: white;
+    font-weight: bold;
+}
+
+.form-container {
+    margin-top: 20px;
+}
+
+.form-container input, .form-container select {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    color:#757575;
+}
+
+.form-container:focus {
+    outline: none;
+}
+
+.form-container .register-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #a77a4d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+}
+
+.form-container .register-btn:hover {
+    background-color: #7a5d36;
+}
+
+.social-login {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.social-login p {
+    font-size: 16px;
+    color: #666;
+}
+
+.social-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 3vw;
+}
+
+.social-buttons .facebook-btn,
+.social-buttons .google-btn {
+    width: 3vw;
+    height: 3vw;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.social-buttons .facebook-btn img,
+.social-buttons .google-btn img {
+    width: 100%;
+    height: auto;
+}
+
+.social-buttons .facebook-btn:hover,
+.social-buttons .google-btn:hover {
+    transform: scale(1.1);
+}
+
+  </style>
+</head>
+<%- include('partials/navbar.ejs') %> <!-- Include the navbar partial -->
+<body>
+
+
+    <% if (messages && messages.length > 0) { %>
+        <div class="alert alert-danger">
+            <% messages.forEach(function(message) { %>
+                <p><%= message %></p>
+            <% }); %>
+        </div>
+    <% } %>
+
+
+<div class="login-box">
+    <div class="tabs">
+        <a href="/login"  class="tab">Sign In</a>
+        <a href="/signup" class="tab active">Register</a>
+    </div>
+
+  <div class="form-container">
+    <form action="/submit-signup" method="POST">
+        <input type="text" name="firstName" placeholder="First Name" required />
+        <input type="text" name="lastName" placeholder="Last Name" required />
+        <input type="email" name="email" placeholder="Email" required />
+        <input type="password" name="password" placeholder="Password" required />
+        <input type="text" name="contactNumber" placeholder="Contact Number" required />
+        <select name="gender" required>
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+        <input type="date" name="dob" placeholder="Date of Birth" required />
+        <input type="text" name="country" placeholder="Country" required />
+        <button class = "register-btn" type="submit">Register</button>
+    </form>
+    
+
+<div class="social-login">
+        <p>OR</p>
+    <div class="social-buttons">
+        <a href = "https://www.facebook.com/">
+            <button class="facebook-btn">
+            <img src="/images/facebook.png" alt="Facebook" />
+        </button>
+        </a>
+        <a href = "https://accounts.google.com/InteractiveLogin/signinchooser?ifkv=AcMMx-eqMozjtK4RJ5hVf7yLMDI3tDEurMt18lK7PLjyG9kzUuowoY4FDkpXWA3fsKTH7mC5YTaoxA&ddm=1&flowName=GlifWebSignIn&flowEntry=ServiceLogin">
+        <button class="google-btn">
+            <img src="/images/email.png" alt="Google" />
+        </button>
+    </div>
+  </div>
+</div>
+</div>
+</body>
+</html>

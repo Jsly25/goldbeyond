@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Login - Gold Beyond</title>
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fdf6ef;
+    color: #333;
+}
+
+.login-box {
+    max-width: 50%;
+    margin: 50px auto;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.tabs {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    background-color: #f3e8d8;
+    padding: 5px;
+}
+
+.tabs a {
+    text-decoration: none;
+    flex: 1;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #a77a4d;
+}
+
+.tabs a.active {
+    background-color: #a77a4d;
+    color: white;
+    font-weight: bold;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #a77a4d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #7a5d36;
+}
+
+.forgot-password {
+    display: block;
+    margin: 10px 0;
+    color: #a77a4d;
+    text-decoration: none;
+    font-size: 14px;
+    text-align: right;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.social-login {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.social-login p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.social-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 3vw;
+}
+
+.social-buttons .facebook-btn,
+.social-buttons .google-btn {
+    width: 3vw;
+    height: 3vw;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.social-buttons .facebook-btn img,
+.social-buttons .google-btn img {
+    width: 100%;
+    height: auto;
+}
+
+.social-buttons .facebook-btn:hover,
+.social-buttons .google-btn:hover {
+    transform: scale(1.1);
+}
+
+
+    </style>
+</head>
+<body>
+
+    <%- include('partials/navbar.ejs') %> 
+    <div class="container">
+        <% if (messages.success) { %>
+            <div class="alert alert-success">
+                <%= messages.success %>
+            </div>
+        <% } %>
+        
+        <% if (errors.error) { %>
+            <div class="alert alert-danger">
+                <%= errors.error %>
+            </div>
+        <% } %>
+    
+        <div class="login-box">
+            <div class="tabs">
+                <a href="/login" class="tab active">Sign In</a>
+                <a href="/signup" class="tab">Register</a>
+            </div>
+            <form action="/submit-login" method="POST" class="login-form">
+                <input type="email" name="email" placeholder="EMAIL" required />
+                <input type="password" name="password" placeholder="PASSWORD" required />
+                
+                <% if (errors && errors.length > 0) { %>
+                    <p style="color: red; font-size: 14px; text-align: center;">
+                        <%= errors[0] %> 
+                    </p>
+                <% } %>
+    
+                <a href="/forgot-password" class="forgot-password">Lost your password?</a>
+                <button type="submit" class="submit-btn">SIGN IN</button>
+            </form>
+        </div>
+    </div>
+    
+
+        <div class="social-login">
+            <p>OR</p>
+            <div class="social-buttons">
+                <a href = "https://www.facebook.com/">
+                    <button class="facebook-btn">
+                    <img src="/images/facebook.png" alt="Facebook" />
+                </button>
+                </a>
+                <a href = "https://accounts.google.com/InteractiveLogin/signinchooser?ifkv=AcMMx-eqMozjtK4RJ5hVf7yLMDI3tDEurMt18lK7PLjyG9kzUuowoY4FDkpXWA3fsKTH7mC5YTaoxA&ddm=1&flowName=GlifWebSignIn&flowEntry=ServiceLogin">
+                <button class="google-btn">
+                    <img src="/images/email.png" alt="Google" />
+                </button>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

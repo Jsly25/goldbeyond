@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Manage Products</title>
+    <style>
+        body {
+            background-color: #f6f3ee;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+
+        h1, h2 {
+            font-weight: bold;
+            color: #65422e;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .table th {
+            background-color: #9f6430;
+            color: #fff;
+            text-align: center;
+        }
+
+        .btn-primary, .btn-warning, .btn-danger {
+            font-size: 1rem;
+            padding: 6px 12px;
+            margin-top: 5px;
+        }
+
+        .btn-warning {
+            background-color: #f39c12;
+            border: none;
+        }
+
+        .btn-warning:hover {
+            background-color: #e67e22;
+        }
+
+        .btn-danger {
+            background-color: #c0392b;
+            border: none;
+        }
+
+        .btn-danger:hover {
+            background-color: #a93226;
+        }
+
+        .modal-content {
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<%- include('partials/navbar.ejs') %>
+
+<body>
+    <div class="container">
+        <h2>Add New Product</h2>
+        <form action="/add-product" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Product Name</label>
+                <input type="text" class="form-control" name="productName" required>
+            </div>
+            <div class="form-group">
+                <label>Category</label>
+                <select class="form-control" name="categoryID" required>
+                    <% categories.forEach(category => { %>
+                        <option value="<%= category.categoryID %>"><%= category.categoryName %></option>
+                    <% }) %>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Price</label>
+                <input type="number" class="form-control" name="price" step="0.01" min = "0.01" required>
+            </div>
+            <div class="form-group">
+                <label>Material</label>
+                <input type="text" class="form-control" name="material" required>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea class="form-control" name="productDescription" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label>Stocks:</label>
+                <input type="number" class="form-control" name="Stock" step="1" required>
+            </div>
+            <div class="form-group">
+                <label>Product Image</label>
+                <input type="file" class="form-control" name="productImg" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Product</button>
+        </form>
+
+        <hr>
+        <h1>Manage Products</h1>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Image</th>
+                    <th>Product Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Material</th>
+                    <th>Description</th>
+                    <th>Stocks</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% products.forEach(product => { %>
+                    <tr>
+                        <td><%= product.productID %></td>
+                        <td><img src="/images/<%= product.productImg %>" width="50"></td>
+                        <td><%= product.productName %></td>
+                        <td><%= product.categoryName %></td>
+                        <td>$<%= parseFloat(product.price).toFixed(2) %></td>
+                        <td><%= product.material %></td>
+                        <td><%= product.productDescription %></td>
+                        <td><%= product.Stock %></td>
+                        <td>
+                            <!-- Edit Button (will trigger Modal) -->
+                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editProductModal<%= product.productID %>">Edit</button>
+
+                            <!-- Delete Button -->
+                            <form action="/delete-product/<%= product.productID %>" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this product?');">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+
+                    <!-- Edit Product Modal -->
+                    <div class="modal fade" id="editProductModal<%= product.productID %>" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Edit Product</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="/edit-product/<%= product.productID %>" method="POST" enctype="multipart/form-data">
+                                        <input type="hidden" name="existingImage" value="<%= product.productImg %>">
+                                        
+                                        <div class="form-group">
+                                            <label>Product Name</label>
+                                            <input type="text" class="form-control" name="productName" value="<%= product.productName %>" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Category</label>
+                                            <select class="form-control" name="categoryID" required>
+                                                <% categories.forEach(category => { %>
+                                                    <option value="<%= category.categoryID %>" <%= category.categoryID == product.categoryID ? 'selected' : '' %>><%= category.categoryName %></option>
+                                                <% }) %>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Price</label>
+                                            <input type="number" class="form-control" name="price" value="<%= product.price %>" step="0.01" min = "0.01" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Material</label>
+                                            <input type="text" class="form-control" name="material" value="<%= product.material %>" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Description</label>
+                                            <textarea class="form-control" name="productDescription" rows="3" required><%= product.productDescription %></textarea>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Stocks:</label>
+                                            <input type="number" class="form-control" name="Stock" step="1" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Current Image</label><br>
+                                            <img src="/images/<%= product.productImg %>" width="100"><br><br>
+                                            <label>New Image (Optional)</label>
+                                            <input type="file" class="form-control" name="productImg">
+                                        </div>
+
+                                        <button type="submit" class="btn btn-success">Update Product</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

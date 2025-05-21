@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Gold Beyond - Appointment</title>
+    <style>
+        body {
+            font-family: "Cormorant Garamond", serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .appointment-container {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 50px;
+        }
+
+        .image-section {
+            flex: 1;
+            background: url("images/appointment.png") no-repeat center center/cover;
+            min-height: 500px;
+        }
+
+        .form-section {
+            flex: 1;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section h2 {
+            color: #6d4b34;
+            margin-top: 50px;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        .form-control {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .btn-request {
+            background-color: #6d4b34;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .btn-request:hover {
+            background-color: #533726;
+        }
+
+        .contact-icons {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 3vw;
+        }
+
+        .contact-icons a {
+            margin: 0 10px;
+            font-size: 3vw;
+            color: #6d4b34;
+            text-decoration: none;
+        }
+
+        .contact-icons a:hover {
+            color: #533726;
+        }
+    </style>
+</head>
+<%- include('partials/navbar.ejs') %>
+<body>
+
+    <!-- Flash Messages Section -->
+    <div id="message-container" class="container mt-3"></div> 
+
+    <div class="appointment-container">
+        <!-- Image Section -->
+        <div class="image-section"></div>
+
+        <!-- Form Section -->
+        <div class="form-section">
+            <h2>Book an Appointment with Our Artisans</h2>
+            <form id="appointmentForm">
+                <div class="d-flex">
+                    <input type="date" class="form-control me-2" name="date" required>
+                    <input type="time" class="form-control" name="time" required>
+                </div>
+                <textarea class="form-control" name="message" rows="3" placeholder="Message"></textarea>
+                <button type="submit" class="btn-request">Request</button>        
+            </form>
+            <div class="contact-icons">
+                <a href="https://web.whatsapp.com/" target="_blank"><i class="fa fa-whatsapp"></i></a>
+                <a href="https://web.telegram.org/a/" target="_blank"><i class="fa fa-telegram"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("appointmentForm").addEventListener("submit", async function(event) {
+            event.preventDefault(); // Prevent default form submission
+    
+            const formData = new FormData(this);
+            const messageContainer = document.getElementById("message-container");
+    
+            const jsonData = {
+                date: formData.get("date"),
+                time: formData.get("time"),
+                message: formData.get("message"),
+            };
+    
+            try {
+                const response = await fetch("/submit-appointment", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(jsonData) // Convert to JSON
+                });
+    
+                const result = await response.json();
+    
+                if (result.success) {
+                    messageContainer.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
+                    this.reset(); // Clear the form after success
+                } else {
+                    messageContainer.innerHTML = `<div class="alert alert-danger">${result.message}</div>`;
+                }
+            } catch (error) {
+                messageContainer.innerHTML = `<div class="alert alert-danger">Something went wrong! Please try again.</div>`;
+            }
+        });
+    </script>
+    
+
+</body>
+</html>
