@@ -4,8 +4,8 @@ Note:
 - The keys are typically not stored here but in an .env file
 - Replace the keys below with your own keys from paypal
 */
-const PAYPAL_CLIENT_ID = "AUdYKDfL8GIUhtIwu8menfmnvWx9jHQJfW6m-ndBbK-7OI9vj2MskT0n2AYLBo1wRA6WcL47-w-9-vUa";
-const PAYPAL_CLIENT_SECRET = "EMwZWJ9QIazDMt2wskemDr9tABImASc9QqmM3c1yzLOFnp4vKPjbWHwXErr6SJTmoFRyhBZ9bM1Afci9";
+const PAYPAL_CLIENT_ID = "";
+const PAYPAL_CLIENT_SECRET = "";
 const BASE = "https://api-m.sandbox.paypal.com";
 
 // export default async function generateAccessToken() {
